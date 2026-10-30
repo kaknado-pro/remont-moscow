@@ -1,0 +1,6 @@
+source.html
+screenshots/
+shoot.py
+shoot_popup.py
+*.pyc
+.DS_Store
