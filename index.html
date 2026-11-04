@@ -740,6 +740,13 @@ window.tildastatcookie='no';setTimeout(function(){(function(d,w,k,o,g) {var n=d.
 .ex-credit{position:absolute;z-index:999;display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-decoration:none;line-height:1.15;font-family:'Gilroy',Arial,sans-serif;transition:opacity .2s;}
 .ex-credit:hover{opacity:.75;}
 .ex-credit__logo{height:22px;width:auto;display:block;}
+.ex-credit_dark .ex-credit__logo{filter:brightness(.22);}
+@media (max-width:640px){
+.ex-credit{gap:3px;}
+.ex-credit__logo{height:13px;}
+.ex-credit__text{font-size:9px;white-space:nowrap;}
+.ex-credit__text br{display:none;}
+}
 .ex-credit__text{font-size:12px;letter-spacing:.02em;opacity:.92;display:block;}
 </style>
 <script>
@@ -751,18 +758,20 @@ window.tildastatcookie='no';setTimeout(function(){(function(d,w,k,o,g) {var n=d.
     a.href = EX_LINK; a.target = '_blank'; a.rel = 'noopener';
     a.className = 'ex-credit';
     a.innerHTML = '<img src="' + LOGO + '" alt="Exponent Digital — разработка сайта и маркетинг" class="ex-credit__logo">' +
-                  '<span class="ex-credit__text">Разработка сайта<br>и маркетинг</span>';
+                  '<span class="ex-credit__text">Разработка сайта <br>и маркетинг</span>';
     return a;
   }
-  function sync(credit, anchor) {
+  function sync(credit, anchor, center) {
     var art = anchor.closest('.t396__artboard');
     if (!art) return;
     var ar = art.getBoundingClientRect();
     var r = anchor.getBoundingClientRect();
-    credit.style.left = Math.round(r.left - ar.left) + 'px';
+    var left = r.left - ar.left;
+    if (center && r.width) left += (r.width - credit.offsetWidth) / 2;
+    credit.style.left = Math.round(left) + 'px';
     credit.style.top = Math.round(r.top - ar.top) + 'px';
   }
-  function install(recId, anchorId, color) {
+  function install(recId, anchorId, color, center) {
     var rec = document.getElementById(recId);
     if (!rec) return;
     var anchor = rec.querySelector('[data-elem-id="' + anchorId + '"]');
@@ -771,8 +780,42 @@ window.tildastatcookie='no';setTimeout(function(){(function(d,w,k,o,g) {var n=d.
     anchor.style.visibility = 'hidden';
     var credit = creditNode();
     credit.style.color = color;
+    if (color !== '#ffffff') credit.classList.add('ex-credit_dark');
     art.appendChild(credit);
-    var f = function () { sync(credit, anchor); };
+    var f = function () { sync(credit, anchor, center); };
+    f();
+    window.addEventListener('resize', f);
+    window.addEventListener('orientationchange', f);
+  }
+  function syncCentered(credit, els, art) {
+    var ar = art.getBoundingClientRect();
+    var l = Infinity, t = Infinity, r = -Infinity, b = -Infinity;
+    els.forEach(function (el) {
+      var x = el.getBoundingClientRect();
+      if (!x.width && !x.height) return;
+      l = Math.min(l, x.left); t = Math.min(t, x.top);
+      r = Math.max(r, x.right); b = Math.max(b, x.bottom);
+    });
+    if (!isFinite(l)) { credit.style.display = 'none'; return; }
+    credit.style.display = '';
+    var w = credit.offsetWidth, h = credit.offsetHeight;
+    credit.style.left = Math.round(l - ar.left + (r - l - w) / 2) + 'px';
+    credit.style.top = Math.round(t - ar.top + (b - t - h) / 2) + 'px';
+  }
+  function installCentered(recId, ids, color) {
+    var rec = document.getElementById(recId);
+    if (!rec) return;
+    var art = rec.querySelector('.t396__artboard');
+    if (!art) return;
+    var els = ids.map(function (id) { return rec.querySelector('[data-elem-id="' + id + '"]'); })
+                 .filter(function (el) { return !!el; });
+    if (!els.length) return;
+    els.forEach(function (el) { el.style.visibility = 'hidden'; });
+    var credit = creditNode();
+    credit.style.color = color;
+    if (color !== '#ffffff') credit.classList.add('ex-credit_dark');
+    art.appendChild(credit);
+    var f = function () { syncCentered(credit, els, art); };
     f();
     window.addEventListener('resize', f);
     window.addEventListener('orientationchange', f);
@@ -782,10 +825,12 @@ window.tildastatcookie='no';setTimeout(function(){(function(d,w,k,o,g) {var n=d.
     if (el) el.style.display = 'none';
   }
   function onReady() {
-    install('rec4262925501', '175889710453891460', '#ffffff'); // шапка — вместо телефона
+    install('rec4262925501', '175889710453891460', '#ffffff', true); // шапка — вместо телефона
     hide('#rec4262927101 [data-elem-id="1665156555314"]');     // подпись «ТЕЛЕФОН:»
     install('rec4262927101', '1665156555318', '#ffffff');      // футер — вместо телефона
     install('rec4262927201', '1658040073033', '#101010');      // нижняя полоса — вместо телефона
+    // нижняя полоса — вместо «EX / Разработка сайта»
+    installCentered('rec4262927201', ['1791379472738000001', '1791379472738000002'], '#101010');
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', onReady);
   else onReady();

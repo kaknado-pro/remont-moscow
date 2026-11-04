@@ -4,3 +4,4 @@ shoot.py
 shoot_popup.py
 *.pyc
 .DS_Store
+publish-org.sh

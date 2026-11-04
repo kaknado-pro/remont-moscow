@@ -2,16 +2,20 @@
 
 Опубликован на GitHub Pages:
 
-## 🌐 https://kaknado-pro.github.io/remont-moscow/
+## 🌐 https://remont-moscow01.github.io/remont-moscow/
 
-Репозиторий: https://github.com/kaknado-pro/remont-moscow
+Короткий адрес https://remont-moscow01.github.io/ — редирект на сайт.
+
+Репозиторий: https://github.com/remont-moscow01/remont-moscow
+
+Старое зеркало: https://kaknado-pro.github.io/remont-moscow/
 
 ---
 
 ## Что сделано
 
 - Точная копия (1:1) лендинга Tilda `bestkeys.tilda.ws/remont-moscow` (проект 12663697, страница 268684509). Оригинал на момент копирования уже удалён (404), поэтому HTML и все ассеты сохранены локально.
-- **Логотип и подпись** «Разработка сайта и маркетинг» — в шапке и в подвале (вместо телефона). Клик по логотипу/подписи ведёт на https://voroninded1987-dot.github.io/exponent-digital/
+- **Логотип и подпись** «Разработка сайта и маркетинг» — в шапке, в контактах подвала и в нижней полосе (вместо телефона и вместо старого блока «EX / Разработка сайта»). Клик по логотипу/подписи ведёт на https://voroninded1987-dot.github.io/exponent-digital/
 - **Номер телефона компании убран полностью** (шапка + футер + нижняя полоса).
 - **Формы работают**: попап «Получите консультацию» и квиз «Рассчитать стоимость» отправляют заявки на рабочий backend `https://remont-kaknado.ru/sendmail.php` (тот же, что у основного сайта), после отправки — страница «Спасибо» (`thankyou.html`).
 
